@@ -55,7 +55,7 @@ const ButtonLink = ({ text }) => {
 const NavLink = ({ text }) => {
   return (
     <Link
-      to="/forgot-password"
+      to="/home"
       className="hidden sm:block mt-2 px-6 py-2 font-bold text-sm bg-transparent text-red-800  hover:text-red-500 cursor-pointer"
     >
       <div className="flex space-x-2 ">
