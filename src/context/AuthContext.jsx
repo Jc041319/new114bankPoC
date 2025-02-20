@@ -141,13 +141,13 @@ export const AuthProvider = ({ children }) => {
     const signinUser = (username) => {
         setIsAuthenticated(true);
         sessionStorage.setItem("username", username);
-        console.log("signinUser currentUser: ", username);
+
     };
 
 
     const getCurrentUser = () => {
         const username = sessionStorage.getItem("username");
-        console.log("getCurrentUser currentUser: ", username);
+
         return username;
     };
 
