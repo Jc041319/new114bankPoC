@@ -76,7 +76,7 @@ const SignInUser = () => {
                 sessionStorage.setItem("accessToken", data.accessToken);
                 sessionStorage.setItem("idToken", data.idToken);
                 sessionStorage.setItem("refreshToken", data.refreshToken);
-                signinUser();
+                signinUser(activeTab === 0 ? formData.username : formDataBP.username);
                 navigate('/home', {
                     state: {
                         username: activeTab === 0 ? formData.username : formDataBP.username,

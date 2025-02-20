@@ -9,8 +9,8 @@ export const AuthProvider = ({ children }) => {
     const [lastActivityTime, setLastActivityTime] = useState(Date.now());
     const navigate = useNavigate();
 
-    useEffect(() => {
 
+    useEffect(() => {
 
         // let checkInterval = 180000; //3 minutes
         let checkInterval = 30000;
@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }) => {
             sessionStorage.removeItem("accessToken");
             sessionStorage.removeItem("idToken");
             sessionStorage.removeItem("refreshToken");
+            sessionStorage.removeItem("username");
             setIsAuthenticated(false);
             setIsProtected(false);
         };
@@ -50,10 +51,14 @@ export const AuthProvider = ({ children }) => {
                     setIsAuthenticated(true);
                     setIsProtected(true);
                 } else {
-                    logout();
+                    // logout();
+                    setIsAuthenticated(false);
+                    setIsProtected(false);
                 }
             } catch (err) {
-                logout();
+                // logout();
+                setIsAuthenticated(false);
+                setIsProtected(false);
             }
         };
 
@@ -115,6 +120,7 @@ export const AuthProvider = ({ children }) => {
                 sessionStorage.removeItem("accessToken");
                 sessionStorage.removeItem("idToken");
                 sessionStorage.removeItem("refreshToken");
+                sessionStorage.removeItem("username");
             } else {
                 throw Error(data);
             }
@@ -123,6 +129,7 @@ export const AuthProvider = ({ children }) => {
             sessionStorage.removeItem("accessToken");
             sessionStorage.removeItem("idToken");
             sessionStorage.removeItem("refreshToken");
+            sessionStorage.removeItem("username");
         } finally {
             setIsAuthenticated(false);
         }
@@ -131,10 +138,56 @@ export const AuthProvider = ({ children }) => {
 
 
 
-    const signinUser = () => {
+    const signinUser = (username) => {
         setIsAuthenticated(true);
+        sessionStorage.setItem("username", username);
+        console.log("signinUser currentUser: ", username);
     };
 
+
+    const getCurrentUser = () => {
+        const username = sessionStorage.getItem("username");
+        console.log("getCurrentUser currentUser: ", username);
+        return username;
+    };
+
+
+
+    const refreshAccessToken = async () => {
+
+        try {
+
+            const username = sessionStorage.getItem("username");
+            const refreshToken = sessionStorage.getItem("refreshToken");
+
+            const payload = { username: username, refreshToken: refreshToken };
+            const apiUrl = import.meta.env.VITE_114BK_API_URL;
+            const url = apiUrl + "api/auth/refresh-token";
+            const response = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(payload),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+
+            if (response.status === 200) {
+                sessionStorage.setItem("accessToken", data.accessToken);
+                sessionStorage.setItem("idToken", data.idToken);
+                sessionStorage.setItem("refreshToken", data.refreshToken);
+                sessionStorage.setItem("username", username);
+            } else {
+                throw Error(data);
+            }
+
+        } catch (error) {
+            signoutUser(username);
+        } finally {
+            setIsAuthenticated(false);
+        }
+
+    };
 
 
 
@@ -170,7 +223,7 @@ export const AuthProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, isProtected, resetIdleTimer, setIsAuthenticated, lastActivityTime, setLastActivityTime, logoutUser, signoutUser, signinUser }}>
+        <AuthContext.Provider value={{ isAuthenticated, isProtected, resetIdleTimer, setIsAuthenticated, lastActivityTime, setLastActivityTime, logoutUser, signoutUser, signinUser, getCurrentUser, refreshAccessToken }}>
             {children}
         </AuthContext.Provider>
     );

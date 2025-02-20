@@ -12,7 +12,7 @@ import SideBar from "./components/SideBar";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 // import { useAuth } from "../context/AuthContext";
 import useSessionTimeout from "./hooks/useSessionTimeout";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 
 import CheckTokenValidity from "./components/auth/CheckTokenValidity";
@@ -25,7 +25,7 @@ import SignUpUser from "./components/auth/SignUpUser"
 import ResetPassword from "./components/auth/ResetPassword"
 import ErrorPage from "./components/screens/ErrorPage";
 import HomePage from "./components/screens/HomePage";
-// import ProtectedRoute from "./components/screens/ProtectedRoute";
+import TokenExpiredDialog from "./components/dialog/TokenExpiredDialog";
 
 
 
@@ -49,6 +49,7 @@ function App() {
   }
 
   const [dataReview, setDataReview] = useState(initialData);
+  const [open, setOpen] = useState(false);
 
   // Function to update row data reviews
   const updateDataReview = (id, updatedReviewRow) => {
@@ -156,10 +157,20 @@ function App() {
 
             {/* <Route path="/home" element={<HomePage />} /> */}
 
-            <Route path="/home" element={
+            {/* <Route path="/home" element={
               <ProtectedRoute>
                 <HomePage />
-              </ProtectedRoute>} />
+              </ProtectedRoute>} /> */}
+
+
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute
+                  children={<HomePage />}
+                  setOpen={setOpen}
+                />
+              } />
 
 
 
@@ -256,6 +267,13 @@ function App() {
       </Routes>
     
     </BrowserRouter> */}
+          {open && (
+            <TokenExpiredDialog
+              open={open}
+              setOpen={setOpen}
+            />
+          )}
+
         </div>
       </AuthProvider>
     </Router >
@@ -270,13 +288,37 @@ const SideBarLayout = () => (
   </>
 );
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, setOpen }) => {
+
+  const isTokenExist = sessionStorage.getItem("accessToken");
+
+  if (!isTokenExist) {
+    return <Navigate to="/sign-in" />;
+  }
+
   const { isAuthenticated } = useAuth();
 
 
-  if (!isAuthenticated) {
-    return <Navigate to='/sign-in' replace />;
-  }
+  useEffect(() => {
+
+
+
+    // perform some check and then update the state
+    if (!isAuthenticated) {
+      setOpen(true);
+    }
+  }, [isAuthenticated, setOpen]);
+
+
+
+
+  // const { isAuthenticated } = useAuth();
+
+  // if (!isAuthenticated) {
+  //   return <Navigate to='/sign-in' replace />;
+  // }
+
+
 
   return children;
 };
