@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FcEngineering } from "react-icons/fc";
 import { Eye, EyeOff } from "lucide-react";
+import { useAuth } from "../../../context/AuthContext";
 
 const SignInUser = () => {
+    const { signinUser } = useAuth();
     const [isVisible, setIsVisible] = useState(false);
     const toggleVisibility = () => setIsVisible(prevState => !prevState);
 
@@ -74,6 +76,7 @@ const SignInUser = () => {
                 sessionStorage.setItem("accessToken", data.accessToken);
                 sessionStorage.setItem("idToken", data.idToken);
                 sessionStorage.setItem("refreshToken", data.refreshToken);
+                signinUser();
                 navigate('/home', {
                     state: {
                         username: activeTab === 0 ? formData.username : formDataBP.username,
@@ -386,7 +389,7 @@ const SignInUser = () => {
                                 to="/"
                                 className="mt-2 px-6 py-3 rounded-full border-2 border-red-600 font-normal text-sm bg-transparent text-red-600  hover:text-red-800"
                             >
-                                戻る
+                                ポータルサイトへ
                             </Link>
 
                         </div>

@@ -123,6 +123,7 @@ const Divider = () => <hr className="bg-[#B30000] dark: bg-gray-800 border borde
 
 const UserCircle = ({ username }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
   const { signoutUser } = useAuth();
 
   const toggleMenu = () => {
@@ -133,6 +134,7 @@ const UserCircle = ({ username }) => {
   const signOut = () => {
     console.log("SignOut");
     signoutUser(username);
+    navigate("/sign-in");
   };
 
   return (

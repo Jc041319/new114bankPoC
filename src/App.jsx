@@ -8,9 +8,9 @@ import UploadReviewContent from "./components/pages/UploadReviewContent";
 import HistoricData from "./components/pages/HistoricData";
 // import ErrorPage from "./components/pages/ErrorPage";
 import SideBar from "./components/SideBar";
-import Login from "./components/pages/Login";
-import { AuthProvider, AuthContext } from "./context/AuthContext";
-import { useAuth } from "./context/AuthContext";
+// import Login from "./components/pages/Login";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+// import { useAuth } from "../context/AuthContext";
 import useSessionTimeout from "./hooks/useSessionTimeout";
 import React, { useState } from 'react';
 
@@ -25,6 +25,9 @@ import SignUpUser from "./components/auth/SignUpUser"
 import ResetPassword from "./components/auth/ResetPassword"
 import ErrorPage from "./components/screens/ErrorPage";
 import HomePage from "./components/screens/HomePage";
+// import ProtectedRoute from "./components/screens/ProtectedRoute";
+
+
 
 
 
@@ -103,7 +106,7 @@ function App() {
 
 
 
-            <Route path="/login" element={<Login />} />
+            {/* <Route path="/login" element={<Login />} /> */}
 
 
             <Route path="/" element={
@@ -151,9 +154,12 @@ function App() {
             } />
 
 
-            <Route path="/home" element={<HomePage />} />
+            {/* <Route path="/home" element={<HomePage />} /> */}
 
-
+            <Route path="/home" element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>} />
 
 
 
@@ -265,15 +271,11 @@ const SideBarLayout = () => (
 );
 
 const ProtectedRoute = ({ children }) => {
-  const [lastActivityTime, setLastActivityTime] = useSessionTimeout();
-  const { isAuthenticated, resetIdleTimer } = useAuth();
+  const { isAuthenticated } = useAuth();
 
-
-  console.log("isAuthenticated: ", isAuthenticated)
-  // resetIdleTimer(lastActivityTime);
 
   if (!isAuthenticated) {
-    return <Navigate to='/login' replace />;
+    return <Navigate to='/sign-in' replace />;
   }
 
   return children;
