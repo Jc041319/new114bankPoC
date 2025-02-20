@@ -131,9 +131,8 @@ const UserCircle = ({ username }) => {
 
   };
 
-  const signOut = () => {
-    console.log("SignOut");
-    signoutUser(username);
+  const signOut = async () => {
+    await signoutUser(username);
     navigate("/sign-in");
   };
 
