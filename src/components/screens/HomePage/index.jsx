@@ -6,11 +6,13 @@ import PieChart from "../../chart/PieChart";
 import BarChart from "../../chart/BarChart";
 // import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useAuth } from "../../../context/AuthContext";
 
 const HomePage = () => {
   const location = useLocation();
+  const { getCurrentUser } = useAuth();
   let username = '';
-  username = location.state.username;
+  username = getCurrentUser() || location.state.username;
   return (
     <div className="content-container">
       <TopNavigation username={username} />

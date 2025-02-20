@@ -8,11 +8,11 @@ import UploadReviewContent from "./components/pages/UploadReviewContent";
 import HistoricData from "./components/pages/HistoricData";
 // import ErrorPage from "./components/pages/ErrorPage";
 import SideBar from "./components/SideBar";
-import Login from "./components/pages/Login";
-import { AuthProvider, AuthContext } from "./context/AuthContext";
-import { useAuth } from "./context/AuthContext";
+// import Login from "./components/pages/Login";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+// import { useAuth } from "../context/AuthContext";
 import useSessionTimeout from "./hooks/useSessionTimeout";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 
 import CheckTokenValidity from "./components/auth/CheckTokenValidity";
@@ -25,6 +25,9 @@ import SignUpUser from "./components/auth/SignUpUser"
 import ResetPassword from "./components/auth/ResetPassword"
 import ErrorPage from "./components/screens/ErrorPage";
 import HomePage from "./components/screens/HomePage";
+import TokenExpiredDialog from "./components/dialog/TokenExpiredDialog";
+
+
 
 
 
@@ -46,6 +49,7 @@ function App() {
   }
 
   const [dataReview, setDataReview] = useState(initialData);
+  const [open, setOpen] = useState(false);
 
   // Function to update row data reviews
   const updateDataReview = (id, updatedReviewRow) => {
@@ -103,7 +107,7 @@ function App() {
 
 
 
-            <Route path="/login" element={<Login />} />
+            {/* <Route path="/login" element={<Login />} /> */}
 
 
             <Route path="/" element={
@@ -151,9 +155,22 @@ function App() {
             } />
 
 
-            <Route path="/home" element={<HomePage />} />
+            {/* <Route path="/home" element={<HomePage />} /> */}
+
+            {/* <Route path="/home" element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>} /> */}
 
 
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute
+                  children={<HomePage />}
+                  setOpen={setOpen}
+                />
+              } />
 
 
 
@@ -250,6 +267,13 @@ function App() {
       </Routes>
     
     </BrowserRouter> */}
+          {open && (
+            <TokenExpiredDialog
+              open={open}
+              setOpen={setOpen}
+            />
+          )}
+
         </div>
       </AuthProvider>
     </Router >
@@ -264,17 +288,37 @@ const SideBarLayout = () => (
   </>
 );
 
-const ProtectedRoute = ({ children }) => {
-  const [lastActivityTime, setLastActivityTime] = useSessionTimeout();
-  const { isAuthenticated, resetIdleTimer } = useAuth();
+const ProtectedRoute = ({ children, setOpen }) => {
 
+  const isTokenExist = sessionStorage.getItem("accessToken");
 
-  console.log("isAuthenticated: ", isAuthenticated)
-  // resetIdleTimer(lastActivityTime);
-
-  if (!isAuthenticated) {
-    return <Navigate to='/login' replace />;
+  if (!isTokenExist) {
+    return <Navigate to="/sign-in" />;
   }
+
+  const { isAuthenticated } = useAuth();
+
+
+  useEffect(() => {
+
+
+
+    // perform some check and then update the state
+    if (!isAuthenticated) {
+      setOpen(true);
+    }
+  }, [isAuthenticated, setOpen]);
+
+
+
+
+  // const { isAuthenticated } = useAuth();
+
+  // if (!isAuthenticated) {
+  //   return <Navigate to='/sign-in' replace />;
+  // }
+
+
 
   return children;
 };
