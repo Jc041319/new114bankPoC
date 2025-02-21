@@ -6,6 +6,8 @@ const TokenExpiredDialog = ({ open, setOpen }) => {
 
   const { signoutUser, getCurrentUser, refreshAccessToken } = useAuth();
 
+  if (!open) return null;
+
   const handleCloseItem = async () => {
 
     const user = getCurrentUser();
@@ -19,7 +21,7 @@ const TokenExpiredDialog = ({ open, setOpen }) => {
   };
 
   return (
-    <Dialog open={open} onClose={setOpen} className="relative z-10">
+    <Dialog open={open} onClose={() => setOpen(true)} className="relative z-10">
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
@@ -40,11 +42,11 @@ const TokenExpiredDialog = ({ open, setOpen }) => {
                 <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                   <DialogTitle as="h3" className="text-base font-semibold text-gray-900">
                     {/* Deactivate account */}
-                    Warning
+                    警告
                   </DialogTitle>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Authentication Failed. Your session token has expired or is no longer active.
+                      認証に失敗しました。セッション トークンの有効期限が切れているか、非アクティブです。
                     </p>
                   </div>
                 </div>
@@ -59,7 +61,7 @@ const TokenExpiredDialog = ({ open, setOpen }) => {
                 className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
               >
                 {/* Deactivate */}
-                Close
+                サインアウト
               </button>
               <button
                 type="button"
@@ -68,7 +70,7 @@ const TokenExpiredDialog = ({ open, setOpen }) => {
                 className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
               >
                 {/* Cancel */}
-                Refresh Token
+                リフレッシュトークン {/* Refresh Token */}
               </button>
             </div>
           </DialogPanel>

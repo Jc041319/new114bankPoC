@@ -165,7 +165,7 @@ const UserCircle = ({ username }) => {
             >
               <div className="flex space-x-6  items-start justify-start ">
                 <FaSignOutAlt size="18" className="text-secondary my-auto" />
-                <span className="block truncate">サインアウトt</span>
+                <span className="block truncate">サインアウト</span>
               </div>
 
 
