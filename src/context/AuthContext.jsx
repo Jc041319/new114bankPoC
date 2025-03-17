@@ -162,7 +162,11 @@ export const AuthProvider = ({ children }) => {
 
   const signinOIDCSSO = () => {
     // window.location.href = "http://localhost:3000/api/auth/sso-oidc-login";
-    window.open("http://localhost:3000/api/auth/sso-oidc-login", "_blank");
+    const apiUrl =
+      import.meta.env.VITE_114BK_API_URL + "api/auth/sso-oidc-login";
+
+    // window.open("http://localhost:3000/api/auth/sso-oidc-login", "_blank");
+    window.open(apiUrl, "_blank");
   };
 
   const getCurrentUser = () => {
