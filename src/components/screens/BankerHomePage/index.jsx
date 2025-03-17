@@ -9,14 +9,31 @@ import { useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { FaBullhorn, FaRegBell, FaRegCreditCard } from "react-icons/fa";
 
-const HomePage = () => {
+const BankerHomePage = () => {
   const location = useLocation();
   const { getCurrentUser } = useAuth();
   let username = "";
   username = getCurrentUser() || location.state.username;
+
+  // const location = useLocation();
+
+  // useEffect(() => {
+  //   const query = new URLSearchParams(location.search);
+  //   const username = query.get("username");
+  //   const idToken = query.get("idToken");
+  //   const accessToken = query.get("accessToken");
+  //   const refreshToken = query.get("refreshToken");
+
+  //   sessionStorage.setItem("accessToken", accessToken);
+  //   sessionStorage.setItem("idToken", idToken);
+  //   sessionStorage.setItem("refreshToken", refreshToken);
+  //   sessionStorage.setItem("username", username);
+  // }, [location]);
+  const isBanker = true;
+
   return (
     <div className="content-container">
-      <TopNavigation username={username} isBanker={false} />
+      <TopNavigation username={username} isBanker={isBanker} />
       {/* <div className="content-list">
         <div className="text-editor-content mt-4"> */}
       <div className="flex flex-col items-center h-full w-full px-5 overflow-y-scroll">
@@ -205,4 +222,4 @@ const AccountCard = ({ sub1, sub2, sub3, sub4, sub5 }) => {
   );
 };
 
-export default HomePage;
+export default BankerHomePage;
