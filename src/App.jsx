@@ -12,28 +12,30 @@ import SideBar from "./components/SideBar";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 // import { useAuth } from "../context/AuthContext";
 import useSessionTimeout from "./hooks/useSessionTimeout";
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect } from "react";
 
 import CheckTokenValidity from "./components/auth/CheckTokenValidity";
-import SignInUser from "./components/auth/SignInUser"
-import VerifyUser from "./components/auth/VerifyUser"
-import AuthLanding from "./components/auth/AuthLanding"
-import UserConfirmation from "./components/auth/UserConfirmation"
-import ForgotPassword from "./components/auth/ForgotPassword"
-import SignUpUser from "./components/auth/SignUpUser"
-import ResetPassword from "./components/auth/ResetPassword"
+import SignInUser from "./components/auth/SignInUser";
+import VerifyUser from "./components/auth/VerifyUser";
+import AuthLanding from "./components/auth/AuthLanding";
+import UserConfirmation from "./components/auth/UserConfirmation";
+import ForgotPassword from "./components/auth/ForgotPassword";
+import SignUpUser from "./components/auth/SignUpUser";
+import ResetPassword from "./components/auth/ResetPassword";
 import ErrorPage from "./components/screens/ErrorPage";
 import HomePage from "./components/screens/HomePage";
 import TokenExpiredDialog from "./components/dialog/TokenExpiredDialog";
+import BankerHomePage from "./components/screens/BankerHomePage";
+import CallbackPage from "./components/screens/CallbackPage";
+import CallbackOutPage from "./components/screens/CallbackOutPage";
 
-
-
-
-
-
-
-import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+  Navigate,
+} from "react-router-dom";
 import EditCategoryKeywordModify from "./components/pages/EditCategoryKeywordModify";
 
 function App() {
@@ -91,7 +93,10 @@ function App() {
         "currentCodeframe",
         JSON.stringify(newDataCodeframe)
       );
-      console.log("currentCodeframe: ", localStorage.getItem("currentCodeframe"));
+      console.log(
+        "currentCodeframe: ",
+        localStorage.getItem("currentCodeframe")
+      );
     }
   };
 
@@ -104,56 +109,27 @@ function App() {
           {/* <SideBar /> */}
 
           <Routes>
-
-
-
             {/* <Route path="/login" element={<Login />} /> */}
 
+            <Route path="/" element={<AuthLanding />} />
 
-            <Route path="/" element={
-              <AuthLanding />
-            } />
+            <Route path="/sign-in" element={<SignInUser />} />
 
-            <Route path="/sign-in" element={
-              <SignInUser />
-            } />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
-            <Route path="/forgot-password" element={
-              <ForgotPassword />
-            } />
+            <Route path="/reset-password" element={<ResetPassword />} />
 
-            <Route path="/reset-password" element={
-              <ResetPassword />
-            } />
+            <Route path="/sign-up" element={<SignUpUser />} />
 
+            <Route path="/user-confirmation" element={<UserConfirmation />} />
 
+            <Route path="/verify-user" element={<VerifyUser />} />
 
-            <Route path="/sign-up" element={
-              <SignUpUser />
-            } />
+            <Route path="/check" element={<CheckTokenValidity />} />
 
+            <Route path="/callback" element={<CallbackPage />} />
 
-
-
-
-            <Route path="/user-confirmation" element={
-              <UserConfirmation />
-            } />
-
-            <Route path="/verify-user" element={
-              <VerifyUser />
-            } />
-
-
-
-
-
-
-
-            <Route path="/check" element={
-              <CheckTokenValidity />
-            } />
-
+            <Route path="/callbackOut" element={<CallbackOutPage />} />
 
             {/* <Route path="/home" element={<HomePage />} /> */}
 
@@ -162,22 +138,23 @@ function App() {
                 <HomePage />
               </ProtectedRoute>} /> */}
 
-
             <Route
               path="/home"
               element={
+                <ProtectedRoute children={<HomePage />} setOpen={setOpen} />
+              }
+            />
+            <Route
+              path="/landing"
+              element={
                 <ProtectedRoute
-                  children={<HomePage />}
+                  children={<BankerHomePage />}
                   setOpen={setOpen}
                 />
-              } />
-
-
+              }
+            />
 
             <Route path="*" element={<ErrorPage />} />
-
-
-
 
             {/* <Route element={<SideBarLayout />} >
               <Route path="/home" element={
@@ -246,11 +223,8 @@ function App() {
 
              
             </Route> */}
-
-
           </Routes>
           {/* </BrowserRouter> */}
-
 
           {/* <Channelbar /> */}
           {/* <BrowserRouter>
@@ -267,17 +241,10 @@ function App() {
       </Routes>
     
     </BrowserRouter> */}
-          {open && (
-            <TokenExpiredDialog
-              open={open}
-              setOpen={setOpen}
-            />
-          )}
-
+          {open && <TokenExpiredDialog open={open} setOpen={setOpen} />}
         </div>
       </AuthProvider>
-    </Router >
-
+    </Router>
   );
 }
 
@@ -289,7 +256,6 @@ const SideBarLayout = () => (
 );
 
 const ProtectedRoute = ({ children, setOpen }) => {
-
   const isTokenExist = sessionStorage.getItem("accessToken");
 
   if (!isTokenExist) {
@@ -298,27 +264,18 @@ const ProtectedRoute = ({ children, setOpen }) => {
 
   const { isAuthenticated } = useAuth();
 
-
   useEffect(() => {
-
-
-
     // perform some check and then update the state
     if (!isAuthenticated) {
       setOpen(true);
     }
   }, [isAuthenticated, setOpen]);
 
-
-
-
   // const { isAuthenticated } = useAuth();
 
   // if (!isAuthenticated) {
   //   return <Navigate to='/sign-in' replace />;
   // }
-
-
 
   return children;
 };
