@@ -13,8 +13,9 @@ const BankerHomePage = () => {
   const location = useLocation();
   const { getCurrentUser } = useAuth();
   let username = "";
-  username = getCurrentUser() || location.state.username;
+  // username = getCurrentUser() || location.state.username;
 
+  username = location.state.username;
   // const location = useLocation();
 
   // useEffect(() => {

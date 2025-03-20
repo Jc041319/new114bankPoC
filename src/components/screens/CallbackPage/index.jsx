@@ -20,6 +20,14 @@ const CallbackPage = () => {
   // const location = useLocation();
 
   useEffect(() => {
+    const getCookie = (name) => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return null;
+    };
+
+    const cookieValue = getCookie("name");
     // async function fetchData() {
     //   const query = new URLSearchParams(location.search);
 
@@ -46,7 +54,7 @@ const CallbackPage = () => {
     signinUser(username);
     navigate("/landing", {
       state: {
-        username: username,
+        username: cookieValue,
       },
     });
     // fetchData();
